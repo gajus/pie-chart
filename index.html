@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="d3.v2.js"></script>
+	<script type="text/javascript" src="d3.ay-pie-chart.js"></script>
+	
+	<script type="text/javascript">
+	var get_random_data	= function()
+	{
+		var data	= [];
+			
+		var getRandomInt	= function(min, max)
+		{
+		  return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+		
+		for(var i = 0; i < 10; i++)
+		{
+			data.push({
+				index: i,
+				value: getRandomInt(0,1000)
+			});
+		}
+		
+		return data;
+	}
+	
+	$(function(){
+		ay_pie_chart('pie-a', get_random_data(), {label: ['multi', 'label', 'support']});
+		ay_pie_chart('pie-b', get_random_data());
+		ay_pie_chart('pie-c', get_random_data());
+	});
+	</script>
+	
+	<style>
+	html, body { margin: 0; padding: 0; font: 12px/20px monospace; }
+	
+	.authorship { margin: 20px; }
+	
+	.graph-wrapper { overflow: hidden; margin: 20px; }
+	
+	svg { float: left; width: 400px; height: 400px; background: #eee; margin: 0 20px 0 0; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+	
+	path.g-1 { fill: #1f77b4; }
+	path.g-2 { fill: #ff7f0e; }
+	path.g-3 { fill: #2ca02c; }
+	path.g-4 { fill: #d62728; }
+	path.g-5 { fill: #9467bd; }
+	path.g-6 { fill: #8c564b; }
+	path.g-7 { fill: #e377c2; }
+	path.g-8 { fill: #7f7f7f; }
+	path.g-9 { fill: #bcbd22; }
+	path.g-10 { fill: #17becf; }
+	
+	text.label.i-1 { font-size: 16px; }
+	
+	/*
+	
+	
+	
+	g.background rect,
+	g.foreground rect { fill: #4581b3; stroke: none; shape-rendering: crispEdges; }
+	
+	g.foreground rect { fill: #ccc; }
+	
+	g.axis line,
+	g.axis path { fill: none; stroke: #000; stroke-width: 1px; shape-rendering: crispEdges; }
+	
+	g.brush rect.extent { fill: steelblue; fill-opacity: .125; }
+	
+	g.brush .resize path { fill: #eee; stroke: #666; }
+	
+	.delays,
+	.distances { margin-left: 20px; }
+	
+	.clippath-graph-dates rect { fill: #f00; }
+	
+	rect.scrollbar { fill: #fefefe; stroke: #666; stroke-width: 1px; shape-rendering: crispEdges; }
+	g.axis { pointer-events: none; }*/
+	
+	</style>
+</head>
+<body>
+	<div class="graph-wrapper">
+		<svg class="pie-a"></svg>
+		<svg class="pie-b"></svg>
+		<svg class="pie-c"></svg>
+	</div>
+	
+	<div class="authorship">
+		This is a demo of the <a href="https://github.com/anuary/ay-pie-chart" target="_blank">pie-chart plugin</a>. This script has been developed by <a href="http://anuary.com/gajus" target="_blank">Gajus Kuizinas</a>.
+	</div>
+</body>
+</html>
