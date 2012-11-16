@@ -1,5 +1,5 @@
 /**
- * Pie Chart v0.0.1
+ * Pie Chart v0.0.2
  * https://github.com/anuary/ay-pie-chart
  *
  * Licensed under the BSD.
@@ -17,90 +17,67 @@ var ay_pie_chart	= function(name, data, options, debug)
 	// The svg element is expected to be a square.
 	var size			= svg[0][0].getBoundingClientRect().width;
 	
-	var outer_radius	= size/3;
+	var radius_outer	= size/3;
 	var radius_inner	= 50;
 	
-	if(typeof options != 'undefined' && options.label)
+	if(typeof options != 'undefined')
 	{
-		console.log('test');
+		if(options.radius_outer)
+		{
+			radius_outer	= options.radius_outer;
+		}
+		
+		if(options.radius_inner)
+		{
+			radius_inner	= options.radius_inner;
+		}
 	
-		var label	= svg
-			.append('g')
-				.attr('class', 'label')
-				.attr('transform', 'translate(' + ((size/2)-radius_inner) + ', ' + ((size/2)-radius_inner) + ')');
-		
-		var label_margin	= 5;
-		
-		var labels			= [];
-		var label_height	= 0;
-		
-		label
-			.selectAll('text')
-			.data(options.label)
-			.enter()
-			.append('text')
-				.attr('class', function(e, i){
-					return 'label i-' + i;
-				})
-				.style('text-anchor', 'middle')
-				.text(function(e){ return e; })
-					.attr('dx', function(){
-						label_height	+= this.getBBox().height;
-					
-						labels.push( this.getBBox().height );
-					
-						return radius_inner;
-					});
-		
-		
-		
-		var label_dy 		= [];
-		
-		var	label_height	= label_height+label_margin*labels.length;
-		
-		var label_top		= (radius_inner*2-label_height)/2;
-		
-		
-		label
-			.selectAll('text')
-			//.enter()
-				.attr('dy', function(e, i){ label_top += labels[i]; return label_top + i*label_margin; });
-		
-		/*
-			.attr('dy', function(e){
-						return radius_inner;
-						console.log(e, this.getBBox().height);
-					});
-		*/
+		if(options.label)
+		{
+			var label	= svg
+				.append('g')
+					.attr('class', 'label')
+					.attr('transform', 'translate(' + ((size/2)-radius_inner) + ', ' + ((size/2)-radius_inner) + ')');
 			
-			/*.data(options.label)
-				.attr('class', 'label');
-		
-		label
-			.append('text')
-				.text('test');*/
-		/*
-		svg
-			.select('g.label')
-			.data(options.label)
-			.enter()
-			.append('')
-	
-		svg
-			.selectAll('text')
-			.data([options.label])
-			.enter()
-			.append('text')
-				.text('test')
-				.attr('dx', function(){
-					return size/2-this.getBBox().width/2;
-				})
-				.attr('dy', function(){
-					return size/2+this.getBBox().height/3;
-				});*/
+			var label_margin	= 5;
+			
+			var labels			= [];
+			var label_height	= 0;
+			
+			label
+				.selectAll('text')
+				.data(options.label)
+				.enter()
+				.append('text')
+					.attr('class', function(e, i){
+						return 'label i-' + i;
+					})
+					.style('text-anchor', 'middle')
+					.text(function(e){ return e; })
+						.attr('dx', function(){
+							label_height	+= this.getBBox().height;
+						
+							labels.push( this.getBBox().height );
+						
+							return radius_inner;
+						});
+			
+			
+			
+			var label_dy 		= [];
+			
+			var	label_height	= label_height+label_margin*labels.length;
+			
+			var label_top		= (radius_inner*2-label_height)/2;
+			
+			
+			label
+				.selectAll('text')
+					.attr('dy', function(e, i){ label_top += labels[i]; return label_top + i*label_margin; });
+		}
 	}
 	
-	var label_radius	= outer_radius+20;
+	var label_radius	= radius_outer+20;
 	
 	var donut	= svg
 		.append('g')
@@ -108,7 +85,7 @@ var ay_pie_chart	= function(name, data, options, debug)
 	
 	var arc		= d3.svg.arc()
 		.innerRadius(radius_inner)
-		.outerRadius(outer_radius);
+		.outerRadius(radius_outer);
 	
 	var pie		= d3.layout.pie().value(function(e){ return e.value; })(data);
 	
@@ -130,7 +107,9 @@ var ay_pie_chart	= function(name, data, options, debug)
 	
 	var text	= slices
 	    .append('text')
-		    .text('test')
+		    .text(function(e){
+				return e.data.name;
+		    })
 		    .each(function(d) {
 		        // Get the center of the slice and then move the label out
 		        var center = arc.centroid(d), // gives you the center point of the slice
