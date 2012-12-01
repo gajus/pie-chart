@@ -98,6 +98,7 @@ ay.pie_chart	= function (name, data, options) {
 			d3.select(labels[0][i])
 				.classed('active', false);
 		});
+	
 	labels_group = svg
 		.append('g')
 		.attr('class', 'labels');
@@ -106,12 +107,26 @@ ay.pie_chart	= function (name, data, options) {
 		.data(data)
 		.enter()
 		.append('g')
+		.filter(function (e) {
+			if (settings.percentage) {
+				return true;
+			}
+			return e.data.name !== undefined;
+		})
 		.attr('class', 'label');
 	label_boxes = labels
 		.append('rect');
 	label_texts = labels
 		.append('text').text(function (e) {
-			return settings.percentage ? e.data.name + ' ' + (((e.endAngle - e.startAngle) / (2 * Math.PI)) * 100).toFixed(2) + '%' : e.data.name;
+			var percentage = (((e.endAngle - e.startAngle) / (2 * Math.PI)) * 100).toFixed(2),
+				label = [];
+			if (e.data.name !== undefined) {
+				label.push(e.data.name);
+			}
+			if (settings.percentage) {
+				label.push(percentage + '%');
+			}			
+			return label.join(' ');
 		})
 		.each(function (d, i) {
 			var center = arc.centroid(d),
