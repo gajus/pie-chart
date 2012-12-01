@@ -4,6 +4,10 @@ This is a helper function that utilises [d3.js](http://d3js.org/) to create pie 
 
 ![screenshot](https://raw.github.com/gajus/pie-chart/master/screenshot.png)
 
+## Browser Support
+
+FireFox cannot read the `clientWidth` of the SVG and the SVG itself does not expand to fill the container. Therefore, every Pie Chart SVG must be wrapped in a `div` container. The SVG element must have 100% width and height.
+
 ## Roadmap
 
 * No known bugs.
