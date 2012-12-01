@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="d3.ay-pie-chart.js"></script>
 	
 	<script type="text/javascript">
-	var get_random_data	= function()
+	var get_random_data	= function(limit)
 	{
 		var data	= [];
 			
@@ -15,7 +15,7 @@
 		  return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
 		
-		for(var i = 0; i < 10; i++)
+		for(var i = 0; i < limit; i++)
 		{
 			data.push({
 				index: i,
@@ -28,9 +28,9 @@
 	}
 	
 	$(function(){
-		ay.pie_chart('pie-a', get_random_data());
-		ay.pie_chart('pie-b', get_random_data());
-		ay.pie_chart('pie-c', get_random_data());
+		ay.pie_chart('pie-a', get_random_data(5));
+		ay.pie_chart('pie-b', get_random_data(10), {radius_inner: 50});
+		ay.pie_chart('pie-c', get_random_data(20));
 	});
 	</script>
 	

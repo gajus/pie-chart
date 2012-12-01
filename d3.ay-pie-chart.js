@@ -17,7 +17,9 @@ ay.pie_chart	= function (name, data, options) {
 	var svg = d3.select('svg.' + name),
 		chart_size = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
 		settings = {
-			radius: {inner: 50, outer: chart_size / 3, label: chart_size / 3 + 20},
+			radius_inner: 0,
+			radius_outer: chart_size / 3,
+			radius_label: chart_size / 3 + 20,
 			percentage: true,
 			label_margin: 10
 		},
@@ -70,8 +72,8 @@ ay.pie_chart	= function (name, data, options) {
 		.attr('class', 'donut')
 		.attr('transform', 'translate(' + (chart_size / 2) + ', ' + (chart_size / 2) +  ')');
 	arc = d3.svg.arc()
-		.innerRadius(settings.radius.inner)
-		.outerRadius(settings.radius.outer);
+		.innerRadius(settings.radius_inner)
+		.outerRadius(settings.radius_outer);
 	data = d3.layout.pie()
 		.value(function (e) {
 			return e.value;
@@ -116,8 +118,8 @@ ay.pie_chart	= function (name, data, options) {
 				x = center[0],
 				y = center[1],
 				h = Math.sqrt(x * x + y * y),
-				lx = x / h * settings.radius.label + chart_size / 2,
-				ly = y / h * settings.radius.label + chart_size / 2,
+				lx = x / h * settings.radius_label + chart_size / 2,
+				ly = y / h * settings.radius_label + chart_size / 2,
 				left_aligned = (d.endAngle - d.startAngle) * 0.5 + d.startAngle > Math.PI,
 				text = d3.select(this),
 				bb = this.getBBox();
