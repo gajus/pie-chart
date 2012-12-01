@@ -1,5 +1,5 @@
 /**
- * Pie Chart v0.0.7
+ * Pie Chart v0.0.8
  * https://github.com/gajus/pie-chart
  *
  * Licensed under the BSD.
@@ -22,49 +22,7 @@ ay.pie_chart	= function (name, data, options, debug) {
 		settings = {
 		radius: {inner: 50, outer: chart_size/3, label: chart_size/3+20},
 		percentage: true,
-		chart_label_margin: 5,
-		label_margin: 10,
-		label: []
-	};
-	
-	var populate_chart_label = function(){
-		var chart_label_group,
-			top_offset,
-			bb_height = 0,
-			bb_height_array = [];
-			
-			
-		chart_label_group	= svg
-				.append('g')
-					.attr('class', 'label')
-					.attr('transform', 'translate(' + ((chart_size/2)-settings.radius.inner) + ', ' + ((chart_size/2)-settings.radius.inner) + ')');
-			
-			chart_label_group
-				.selectAll('text')
-				.data(options.label)
-				.enter()
-				.append('text')
-				.attr('class', function(e, i){
-					return 'label i-' + i;
-				})
-				.text(function(e){ return e; })
-				.attr('dx', settings.radius.inner)
-				.each(function(){
-					var height = this.getBBox().height;
-				
-					bb_height += height;
-				
-					bb_height_array.push( height );
-				})
-			
-			bb_height	+= settings.chart_label_margin*bb_height_array.length;
-			
-			top_offset			= (settings.radius.inner*2-bb_height)/2;
-			
-			
-			chart_label_group
-				.selectAll('text')
-					.attr('dy', function(e, i){ top_offset += bb_height_array[i]; return top_offset + i*settings.chart_label_margin; });
+		label_margin: 10
 	};
 	
 	if(options !== undefined)
@@ -75,16 +33,6 @@ ay.pie_chart	= function (name, data, options, debug) {
 			{
 				settings[parameter]		= options[parameter];
 			}
-		}
-		
-		if(settings.label.length)
-		{
-			if(!settings.radius.inner)
-			{
-				throw 'Pie Inner Radius must be present no utilise the graph label.'
-			}
-		
-			populate_chart_label(settings.label);
 		}
 	}
 	
