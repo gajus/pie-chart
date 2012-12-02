@@ -8,11 +8,6 @@ Simple function to generate Pie Charts utilisiing [d3.js](http://d3js.org/). Thi
 
 FireFox cannot read the `clientWidth` of the SVG and the SVG itself does not expand to fill the container. Therefore, every Pie Chart SVG must be wrapped in a `div` container. The SVG element must have 100% width and height.
 
-## Roadmap
-
-* Merging of the tiny data entries. If there is more than 1 data entry representing less than 1%, these will be merged into a group "others".
-* No known bugs.
-
 ## License & Notes
 
 The BSD License - Copyright (c) 2012 [Gajus Kuizinas](http://anuary.com/gajus).
