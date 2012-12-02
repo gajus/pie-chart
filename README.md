@@ -10,6 +10,7 @@ FireFox cannot read the `clientWidth` of the SVG and the SVG itself does not exp
 
 ## Roadmap
 
+* Merging of the tiny data entries. If there is more than 1 data entry representing less than 1%, these will be merged into a group "others".
 * No known bugs.
 
 ## License & Notes
