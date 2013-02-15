@@ -29,6 +29,7 @@ define([], function(){
           label_margin: 10,
           group_data: 0,
           name: function(d){ return d.name; },
+          value: function(d){ return d.value; },
           color: function(d,i){ return colorScale(i); }
         },
         donut,
@@ -73,19 +74,19 @@ define([], function(){
             removed_data_size = 0,
             i;
           data.forEach(function (e) {
-            data_size += e.value;
+            data_size += settings.value(e);
           });
           // Check if it is worth grouping the data.
           for (i = data.length-1; i >= 0; i--) {
-            if ((data[i].value / data_size) * 100 < settings.group_data) {
+            if ((settings.value(data[i]) / data_size) * 100 < settings.group_data) {
               removed_data_size++;
             }
           }
           if(removed_data_size > 1) {
             removed_data_size = 0;
             for (i = data.length-1; i >= 0; i--) {
-              if ((data[i].value / data_size) * 100 < settings.group_data) {
-                removed_data_size += data.splice(i, 1)[0].value;
+              if ((settings.value(data[i]) / data_size) * 100 < settings.group_data) {
+                removed_data_size += settings.value(data.splice(i, 1)[0]);
               }
             }
           }
@@ -113,9 +114,7 @@ define([], function(){
       .innerRadius(settings.radius_inner)
       .outerRadius(settings.radius_outer);
     data = d3.layout.pie()
-      .value(function (e) {
-        return e.value;
-      })
+      .value(settings.value)
       .sort(function (a, b) {
         return b.index - a.index;
       })(data);
