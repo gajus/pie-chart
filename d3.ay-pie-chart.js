@@ -8,13 +8,17 @@
  * Author: Gajus Kuizinas <g.kuizinas@anuary.com>
  */
 define([], function(){
-  return function (name, data, options) {
+  return function (svg, data, options) {
     'use strict';
     if (window.d3 === undefined) {
       throw 'Pie Chart requires presence of the d3.js library.';
     }
-    var svg = d3.select('svg.' + name),
-        chart_size = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
+    if (typeof svg === "string") {
+      svg = d3.select('svg.'+name);
+    }
+    var chart_width = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
+        chart_height = svg[0][0].clientHeight || svg[0][0].parentNode.clientHeight,
+        chart_size = d3.min([chart_width, chart_height]),
         settings = {
           radius_inner: 0,
           radius_outer: chart_size / 3,
