@@ -19,6 +19,7 @@ define([], function(){
     var chart_width = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
         chart_height = svg[0][0].clientHeight || svg[0][0].parentNode.clientHeight,
         chart_size = d3.min([chart_width, chart_height]),
+        colorScale = d3.scale.category20().domain([0, data.length]),
         settings = {
           radius_inner: 0,
           radius_outer: chart_size / 3,
@@ -27,7 +28,8 @@ define([], function(){
           value: false,
           label_margin: 10,
           group_data: 0,
-          name: function(d){ return d.name; }
+          name: function(d){ return d.name; },
+          color: function(d,i){ return colorScale(i); }
         },
         donut,
         arc,
@@ -122,9 +124,7 @@ define([], function(){
       .data(data)
       .enter()
       .append('path')
-      .attr('class', function (d) {
-        return 'g-' + d.data.index;
-      })
+      .style('fill', function(d,i){ return settings.color(d.data, i); })
       .attr('d', arc)
       .on('mouseover', function (d, i) {
         d3.select(labels[0][i])
