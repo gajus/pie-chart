@@ -187,5 +187,6 @@ define([], function(){
       });
     reposition_colliding_labels(grouped_labels.left);
     reposition_colliding_labels(grouped_labels.right);
+    return svg;
   };
 });
