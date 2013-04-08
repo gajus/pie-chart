@@ -21,6 +21,7 @@ ay.pie_chart	= function (name, data, options) {
 			radius_outer: chart_size / 3,
 			radius_label: chart_size / 3 + 20,
 			percentage: true,
+			value: false,
 			label_margin: 10,
 			group_data: 0
 		},
@@ -129,7 +130,7 @@ ay.pie_chart	= function (name, data, options) {
 			d3.select(labels[0][i])
 				.classed('active', false);
 		});
-	
+
 	labels_group = svg
 		.append('g')
 		.attr('class', 'labels');
@@ -154,9 +155,13 @@ ay.pie_chart	= function (name, data, options) {
 			if (e.data.name !== undefined) {
 				label.push(e.data.name);
 			}
+			if (settings.value) {
+				label.push(' - ' + e.data.value);
+			}
 			if (settings.percentage) {
-				label.push(percentage + '%');
-			}			
+				label.push(' (' +percentage + '%)');
+			}
+
 			return label.join(' ');
 		})
 		.each(function (d, i) {
