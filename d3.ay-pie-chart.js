@@ -175,7 +175,13 @@ define([], function(){
           ly = y / h * settings.radius_label + chart_size / 2,
           left_aligned = (d.endAngle - d.startAngle) * 0.5 + d.startAngle > Math.PI,
           text = d3.select(this),
+          bb;
+        // Firefox throws an exception on getBBox if SVG element is not visible
+        try {
           bb = this.getBBox();
+        } catch (e) {
+          bb = {width: 0, height: 0}
+        }
         grouped_labels[left_aligned ? 'left' : 'right'].push({
           index: i,
           width: bb.width,
