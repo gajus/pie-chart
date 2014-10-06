@@ -8,13 +8,17 @@
  * Author: Gajus Kuizinas <g.kuizinas@anuary.com>
  */
 define([], function(){
-  return function (name, data, options) {
+  return function (svg, data, options) {
     'use strict';
     if (window.d3 === undefined) {
       throw 'Pie Chart requires presence of the d3.js library.';
     }
-    var svg = d3.select('svg.' + name),
-        chart_size = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
+    if (typeof svg === "string") {
+      svg = d3.select('svg.'+name);
+    }
+    var chart_width = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
+        chart_height = svg[0][0].clientHeight || svg[0][0].parentNode.clientHeight,
+        chart_size = d3.min([chart_width, chart_height]),
         settings = {
           radius_inner: 0,
           radius_outer: chart_size / 3,
@@ -171,7 +175,13 @@ define([], function(){
           ly = y / h * settings.radius_label + chart_size / 2,
           left_aligned = (d.endAngle - d.startAngle) * 0.5 + d.startAngle > Math.PI,
           text = d3.select(this),
+          bb;
+        // Firefox throws an exception on getBBox if SVG element is not visible
+        try {
           bb = this.getBBox();
+        } catch (e) {
+          bb = {width: 0, height: 0}
+        }
         grouped_labels[left_aligned ? 'left' : 'right'].push({
           index: i,
           width: bb.width,
@@ -183,5 +193,6 @@ define([], function(){
       });
     reposition_colliding_labels(grouped_labels.left);
     reposition_colliding_labels(grouped_labels.right);
+    return svg;
   };
 });
