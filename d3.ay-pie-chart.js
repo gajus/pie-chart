@@ -19,6 +19,7 @@ define([], function(){
     var chart_width = svg[0][0].clientWidth || svg[0][0].parentNode.clientWidth,
         chart_height = svg[0][0].clientHeight || svg[0][0].parentNode.clientHeight,
         chart_size = d3.min([chart_width, chart_height]),
+        colorScale = d3.scale.category20().domain([0, data.length]),
         settings = {
           radius_inner: 0,
           radius_outer: chart_size / 3,
@@ -26,7 +27,10 @@ define([], function(){
           percentage: true,
           value: false,
           label_margin: 10,
-          group_data: 0
+          group_data: 0,
+          name: function(d){ return d.name; },
+          value: function(d){ return d.value; },
+          color: function(d,i){ return colorScale(i); }
         },
         donut,
         arc,
@@ -70,19 +74,19 @@ define([], function(){
             removed_data_size = 0,
             i;
           data.forEach(function (e) {
-            data_size += e.value;
+            data_size += settings.value(e);
           });
           // Check if it is worth grouping the data.
           for (i = data.length-1; i >= 0; i--) {
-            if ((data[i].value / data_size) * 100 < settings.group_data) {
+            if ((settings.value(data[i]) / data_size) * 100 < settings.group_data) {
               removed_data_size++;
             }
           }
           if(removed_data_size > 1) {
             removed_data_size = 0;
             for (i = data.length-1; i >= 0; i--) {
-              if ((data[i].value / data_size) * 100 < settings.group_data) {
-                removed_data_size += data.splice(i, 1)[0].value;
+              if ((settings.value(data[i]) / data_size) * 100 < settings.group_data) {
+                removed_data_size += settings.value(data.splice(i, 1)[0]);
               }
             }
           }
@@ -110,9 +114,7 @@ define([], function(){
       .innerRadius(settings.radius_inner)
       .outerRadius(settings.radius_outer);
     data = d3.layout.pie()
-      .value(function (e) {
-        return e.value;
-      })
+      .value(settings.value)
       .sort(function (a, b) {
         return b.index - a.index;
       })(data);
@@ -121,9 +123,7 @@ define([], function(){
       .data(data)
       .enter()
       .append('path')
-      .attr('class', function (d) {
-        return 'g-' + d.data.index;
-      })
+      .style('fill', function(d,i){ return settings.color(d.data, i); })
       .attr('d', arc)
       .on('mouseover', function (d, i) {
         d3.select(labels[0][i])
@@ -146,7 +146,7 @@ define([], function(){
         if (settings.percentage) {
           return true;
         }
-        return e.data.name !== undefined;
+        return settings.name(e.data) !== undefined;
       })
       .attr('class', 'label');
     label_boxes = labels
@@ -154,9 +154,10 @@ define([], function(){
     label_texts = labels
       .append('text').text(function (e) {
         var percentage = (((e.endAngle - e.startAngle) / (2 * Math.PI)) * 100).toFixed(2),
-          label = [];
-        if (e.data.name !== undefined) {
-          label.push(e.data.name);
+            label = [],
+            name = settings.name(e.data);
+        if (name !== undefined) {
+          label.push(name);
         }
         if (settings.value) {
             label.push(' - ' + e.data.value);
